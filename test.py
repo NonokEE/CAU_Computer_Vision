@@ -1,30 +1,31 @@
-import cv2
-import matplotlib.image as img
-import matplotlib.pyplot as plt
 import numpy as np
+import cv2
+import matplotlib.pyplot as plt
 
-coord1 = []
-coord2 = []
+hist_bin = 32
 
-def getCoord_1(event, x, y, flags, param):
-    if event == cv2.EVENT_LBUTTONDOWN:
-        coord1.append((y,x))
-        print(x, y)
+def norm_gradient(src):
+    
+    x_forward = np.concatenate([src[:, 1:], src[:, -1:]], axis = 1)
+    x_backward = np.concatenate([src[:, :1], src[:, :-1]], axis = 1)
+    Dx = np.subtract(x_forward, x_backward)/2
 
-image1_cv = cv2.imread("1st.jpg")
+    y_forward = np.concatenate([src[1:, :], src[-1:, :]])
+    y_backward = np.concatenate([src[:1, :], src[:-1, :]])
+    Dy = np.subtract(y_forward, y_backward)/2
 
-cv2.namedWindow("1st", cv2.WINDOW_NORMAL)
-cv2.resizeWindow("1st", 1000, 800)
-cv2.setMouseCallback("1st", getCoord_1)
+    norm_gradient = np.sqrt(np.add(np.square(Dx), np.square(Dy)))
+    
+    return norm_gradient
 
-cv2.imshow("1st", image1_cv)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+def gradient_histogram_cv(src_list):
+    hist_list = []
 
-cv2.namedWindow("1st_1", cv2.WINDOW_NORMAL)
-cv2.resizeWindow("1st_1", 500, 500)
-cv2.setMouseCallback("1st_1", getCoord_1)
-
-cv2.imshow("1st_1", image1_cv[coord1[0][0]-10:coord1[0][0]+10, coord1[0][1]-10:coord1[0][1]+10])
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    for i in range(len(src_list)):
+        print(f"- {i+1}th -")
+        src = cv2.cvtColor(src_list[i], cv2.COLOR_BGR2GRAY)
+        grd = norm_gradient(src)
+        hist = cv2.calcHist([grd], [0], None, [int(256/hist_bin)], [0, 360])
+        hist_list.append(hist)
+        plt.plot(hist)
+        plt.show()
