@@ -1,6 +1,5 @@
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
 
 def cv2_imshow(name: str, src):
     cv2.namedWindow(name, cv2.WINDOW_NORMAL)
@@ -36,14 +35,14 @@ def rectangle_patch(src, coord):
 
 ###
 
-image1 = cv2.imread("1st.jpg")
+image1 = cv2.imread("1st_shifted.jpg")
 
-cv2.namedWindow("1st", cv2.WINDOW_NORMAL)
-cv2.resizeWindow("1st", 800, 800)
-cv2.moveWindow("1st", 500, 100)
-cv2.setMouseCallback("1st", getCoord_1)
+cv2.namedWindow("1st_shifted", cv2.WINDOW_NORMAL)
+cv2.resizeWindow("1st_shifted", 800, 800)
+cv2.moveWindow("1st_shifted", 500, 100)
+cv2.setMouseCallback("1st_shifted", getCoord_1)
 
-cv2.imshow("1st", image1)
+cv2.imshow("1st_shifted", image1)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
