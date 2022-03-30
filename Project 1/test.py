@@ -29,8 +29,10 @@ def getCoord_2(event, x, y, flags, param):
 
 def rectangle_patch(src, coord):
     colors = [(0,0,255), (255,0,0), (0,255,0), (255,255,255)]
+    t = src.copy()
     for i in range(len(coord)):
-        src = cv2.rectangle(src, [coord[i][1]-rec_size, coord[i][0]-rec_size], [coord[i][1]+rec_size, coord[i][0]+rec_size], colors[i], 10)
+        t = cv2.rectangle(t, [coord[i][1]-rec_size, coord[i][0]-rec_size], [coord[i][1]+rec_size, coord[i][0]+rec_size], colors[i], 10)
+    return t
 
 ###
 
@@ -45,7 +47,7 @@ cv2.imshow("1st", image1)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-rectangle_patch(image1, coord1)
+image1_rec = rectangle_patch(image1, coord1)
 
 ##
 
@@ -60,9 +62,13 @@ cv2.imshow("2nd", image2)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-rectangle_patch(image2, coord2)
+image2_rec = rectangle_patch(image2, coord1)
 
 ##
+
+hap = np.concatenate([image1_rec, image2_rec], axis = 1)
+cv2_imshow("test", hap)
+
 
 hap = np.concatenate([image1, image2], axis = 1)
 cv2_imshow("test", hap)
